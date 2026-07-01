@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: dark; }
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  background: #0a0a0f;
+  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  /* dvh fills screen minus mobile browser chrome (address bar, nav) */
+  height: 100dvh;
+  width: 100dvw;
+  overscroll-behavior: none;
+  position: fixed; /* prevents iOS scroll bounce */
+}
+
+#root {
+  height: 100dvh;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* iOS safe areas */
+.control-bar {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.top-safe {
+  top: env(safe-area-inset-top, 16px);
+}
+
+/* Touch feedback — no default highlights */
+button, a {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* ── Animations ──────────────────────────────────────────────────────────── */
+
+/* Caption typewriter cursor */
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+.caption-cursor::after {
+  content: '|';
+  animation: blink 0.8s ease-in-out infinite;
+  margin-left: 2px;
+  color: rgba(255,255,255,0.5);
+}
+
+/* Mic pulse ring */
+@keyframes mic-ring {
+  0%   { transform: scale(1);   opacity: 0.6; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+.mic-ring { animation: mic-ring 1.2s ease-out infinite; }
+
+/* Avatar gradient vignette */
+.avatar-vignette {
+  background: radial-gradient(
+    ellipse at center,
+    transparent 40%,
+    rgba(10,10,15,0.65) 100%
+  );
+}
+
+/* Bottom gradient fade */
+.bottom-fade {
+  background: linear-gradient(
+    to top,
+    rgba(10,10,15,0.97) 0%,
+    rgba(10,10,15,0.55) 55%,
+    transparent 100%
+  );
+}
+
+/* Slide-over panel */
+@keyframes slide-in-right {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+.slide-in { animation: slide-in-right 0.22s ease-out; }
+
+/* Equalizer bars */
+@keyframes eq {
+  0%,100% { transform: scaleY(0.25); }
+  50%     { transform: scaleY(1);    }
+}
+
+/* Connecting dot bounce */
+@keyframes bounce {
+  0%,100% { transform: translateY(0); }
+  50%     { transform: translateY(-8px); }
+}
+
+/* Caption fade-up */
+@keyframes caption-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.caption-in { animation: caption-in 0.28s ease-out; }
+
+/* Scrollbars */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+
+/* Force avatar video onto its own GPU compositing layer.
+   On Android, hardware-decoded video renders above all HTML by default.
+   translateZ(0) creates a separate layer, allowing HTML overlays above it. */
+#anam-video {
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+}
+
+/* Subtitle scroll — hide scrollbar but allow scroll */
+.subtitle-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+}
+.subtitle-scroll::-webkit-scrollbar { display: none; }
